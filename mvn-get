@@ -1,0 +1,65 @@
+#!/bin/bash -
+#
+# mvn-get: Download a maven artifact (and its dependencies) from the command
+# line. Uses the 'maven-dependencies-plugin' from the 'mvn' command line, so
+# the downloaded artifacts are stored in the local ~/.m2/repository/ just as
+# if they were specified as deps in a pom.xml of a built project.
+#
+#
+# Usage:
+#
+#     mvn-get groupId:artifactId:version[:type[:classifier]]
+#
+#
+# Example:
+#
+#     $ mvn-get org.apache.avro:avro:1.8.2
+#
+#
+# Notes:
+#
+#     * The maven-dependency-plugin can be a little picky, especially older
+#       versions (e.g. 2.1). Versions that are known to work with this
+#       approach:
+#           - 2.8
+#           - 3.1.1
+#
+
+declare -r PROG='mvn-get'
+
+function __f_print_usage {
+    cat - <<'EOF'
+mvn-get [MAVEN_OPT...] MAVEN_ARTIFACT_COORDINATES
+
+Where MAVEN_ARTIFACT_COORDINATES has the form:
+
+    groupId:artifactId:version[:type[:classifier]]
+EOF
+}
+
+if test $# -lt 1; then
+    printf "${PROG} (error): required MAVEN_ARTIFACT_COORDINATES not provided; bailing out\n" 1>&2
+    __f_print_usage 1>&2
+    exit 1
+fi
+
+_maven_artifact_coords=$1
+shift
+
+# Any remaining arguments will be passed-through "as is" to mvn
+
+# XXX: It's wonky that we depend on the order of the command line arguments,
+#      but this version of the program is just a rough sketch for my personal
+#      use. A more productized future version might do something more
+#      intelligent.
+
+declare -a _my_mvn_opts=()
+
+# _my_mvn_opts+=( 'org.apache.maven.plugins:maven-dependency-plugin:2.8:get' )
+# _my_mvn_opts+=( 'org.apache.maven.plugins:maven-dependency-plugin:3.1.1get' )
+_my_mvn_opts+=( 'org.apache.maven.plugins:maven-dependency-plugin:get' )
+
+_my_mvn_opts+=( '-Dartifact='"${_maven_artifact_coords}" )
+
+set -x
+mvn "$@" "${_my_mvn_opts[@]}"
