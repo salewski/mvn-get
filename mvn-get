@@ -54,6 +54,17 @@ declare -r MAINTAINER='Alan D. Salewski <salewski@att.net>'  # FIXME: filter-in 
 declare -r VERSION='0.0.1'  # FIXME: filter-in at build time
 
 
+# declare -r gl_const_build_date='@BUILD_DATE@'  # value filtered-in at build time
+# declare -r gl_const_release="${VERSION}  (built: ${gl_const_build_date})"
+declare -r gl_const_release="${VERSION}"
+# declare -r gl_const_release="${VERSION}"
+
+BE_VERBOSE=false # info-level output; override with one '-v' opt
+
+# This one implies BE_VERBOSE, too
+DEBUGGING=false  # debug-level output; override with two '-v' opts
+
+
 
 f_print_help () {
 
