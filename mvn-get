@@ -24,12 +24,16 @@
 #
 # Usage:
 #
-#     mvn-get groupId:artifactId:version[:type[:classifier]]
+#     mvn-get [OPTION...] groupId:artifactId:version[:type[:classifier]] [--] [MVN_OPTION...]
 #
 #
 # Example:
 #
 #     $ mvn-get org.apache.avro:avro:1.8.2
+#
+#
+# FIXME: This whole thing is just a rough sketch; don't believe the help
+#        output -- none of the command line options yet work as advertized.
 #
 #
 # Notes:
@@ -43,19 +47,54 @@
 
 declare -r PROG='mvn-get'
 
-function __f_print_usage {
-    cat - <<'EOF'
-Usage: mvn-get [MAVEN_OPT...] MAVEN_ARTIFACT_COORDINATES
+# declare -r MAINTAINER='@PACKAGE_BUGREPORT@'  # value filtered-in at build time
+declare -r MAINTAINER='Alan D. Salewski <salewski@att.net>'  # FIXME: filter-in at build time
+
+# declare -r VERSION='@VERSION@'  # value filtered-in at build time
+declare -r VERSION='0.0.1'  # FIXME: filter-in at build time
+
+
+
+f_print_help () {
+
+    cat <<EOF
+usage: $PROG [OPTION...] MAVEN_ARTIFACT_COORDINATES [--] [MVN_OPTION...]
 
 where MAVEN_ARTIFACT_COORDINATES has the form:
 
     groupId:artifactId:version[:type[:classifier]]
+
+Downloads a maven artifact (and its dependencies) from the command line.
+
+  -h, --help     Print this help message on stdout
+  -V, --version  Print the version of the program on stdout
+
+  -v, --verbose  Print program progress messages on stderr. Specify multiple
+                   times to increase verbosity: info, debug, and tracing (set -x)
+
+      --         Signals the end of options and disables further options processing. All
+                   remaining arguments will be passed through to mvn(1)
+
+Report bugs to $MAINTAINER.
 EOF
 }
 
+f_print_version () {
+    cat <<EOF
+${PROG} ${gl_const_release}
+Copyright (C) 2019 Alan D. Salewski
+License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Alan D. Salewski.
+EOF
+}
+
+
 if test $# -lt 1; then
     printf "${PROG} (error): required MAVEN_ARTIFACT_COORDINATES not provided; bailing out\n" 1>&2
-    __f_print_usage 1>&2
+    f_print_help 1>&2
     exit 1
 fi
 
