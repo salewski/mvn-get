@@ -31,7 +31,7 @@ function __f_print_usage {
     cat - <<'EOF'
 Usage: mvn-get [MAVEN_OPT...] MAVEN_ARTIFACT_COORDINATES
 
-Where MAVEN_ARTIFACT_COORDINATES has the form:
+where MAVEN_ARTIFACT_COORDINATES has the form:
 
     groupId:artifactId:version[:type[:classifier]]
 EOF
