@@ -29,7 +29,7 @@ declare -r PROG='mvn-get'
 
 function __f_print_usage {
     cat - <<'EOF'
-mvn-get [MAVEN_OPT...] MAVEN_ARTIFACT_COORDINATES
+Usage: mvn-get [MAVEN_OPT...] MAVEN_ARTIFACT_COORDINATES
 
 Where MAVEN_ARTIFACT_COORDINATES has the form:
 
