@@ -65,6 +65,14 @@ BE_VERBOSE=false # info-level output; override with one '-v' opt
 DEBUGGING=false  # debug-level output; override with two '-v' opts
 
 
+# By default we'll use the external programs found at configure-time (values
+# are filtered-in here at build time). But we allow the user to override any
+# particular tool by setting an environment variable named after the tool
+# (with hyphen chars changed to underscores).
+
+#MVN_PROG="${MVN:-@MVN_PROG@}"
+MVN_PROG="${MVN:-mvn}"
+
 
 f_print_help () {
 
@@ -128,4 +136,4 @@ _my_mvn_opts+=( 'org.apache.maven.plugins:maven-dependency-plugin:get' )
 _my_mvn_opts+=( '-Dartifact='"${_maven_artifact_coords}" )
 
 set -x
-mvn "$@" "${_my_mvn_opts[@]}"
+"${MVN_PROG}" "$@" "${_my_mvn_opts[@]}"
